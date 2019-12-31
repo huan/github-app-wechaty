@@ -1,0 +1,42 @@
+{
+  "name": "github-app-wechaty",
+  "description": "Wechaty Bot",
+  "repository": "https://github.com/wechaty/github-app-wechaty",
+  "logo": "https://wechaty.github.io/wechaty/images/wechaty-icon.png",
+  "keywords": [
+    "wechaty",
+    "heroku",
+    "deploy",
+    "button",
+    "github",
+    "github app"
+  ],
+  "website": "https://github.com/wechaty/github-app-wechaty",
+  "success_url": "/",
+  "env": {
+    "WEBHOOK_PROXY_URL": {
+      "description": "Webhook Proxy URL",
+      "required": true
+    },
+    "APP_ID": {
+      "description": "the ID of the app, which you can get from the app settings page https://github.com/settings/apps",
+      "required": true
+    },
+    "PRIVATE_KEY": {
+      "description": "the contents of the private key you downloaded after creating the app.",
+      "required": true
+    },
+    "WEBHOOK_SECRET": {
+      "description": "the Webhook Secret that you generated when you created the app.",
+      "required": true
+    }
+  },
+  "engines": {
+    "node": "10"
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

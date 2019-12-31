@@ -1,0 +1,68 @@
+{
+  "name": "github-app-wechaty",
+  "version": "0.0.5",
+  "private": true,
+  "description": "A Probot App for Wechaty",
+  "author": "Huan LI <zixia@zixia.net>",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/wechaty/github-app-wechaty.git",
+  "homepage": "https://github.com/wechaty/github-app-wechaty",
+  "bugs": "https://github.com/wechaty/github-app-wechaty/issues",
+  "keywords": [
+    "probot",
+    "github",
+    "wechaty",
+    "probot-app"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "nodemon --ignore lib --exec \"npm start\"",
+    "start": "npm run build && probot run ./lib/index.js",
+    "lint": "npm run lint:es && npm run lint:ts",
+    "lint:ts": "tsc --noEmit",
+    "lint:es": "eslint --ignore-pattern tests/fixtures/ '{bin,examples,scripts,src,tests}/**/*.ts'",
+    "test": "npm run lint && jest",
+    "test:watch": "jest --watch --notify --notifyMode=change --coverage"
+  },
+  "dependencies": {
+    "@chatie/eslint-config": "^0.8.1",
+    "@chatie/git-scripts": "^0.2.5",
+    "file-box": "^0.8.27",
+    "probot": "^9.5.3",
+    "wechaty-puppet": "^0.16.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.19",
+    "@types/nock": "^11.1.0",
+    "@types/node": "^13.1.0",
+    "@typescript-eslint/parser": "^2.4.0",
+    "eslint-plugin-typescript": "^0.14.0",
+    "jest": "^24.9.0",
+    "nock": "^11.4.0",
+    "nodemon": "^2.0.0",
+    "smee-client": "^1.1.0",
+    "standard": "^14.3.1",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.4"
+  },
+  "engines": {
+    "node": ">= 8.3.0"
+  },
+  "standard": {
+    "parser": "@typescript-eslint/parser",
+    "env": [
+      "jest"
+    ],
+    "plugins": [
+      "typescript"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "git": {
+    "scripts": {
+      "pre-push": "npx git-scripts-pre-push"
+    }
+  }
+}
