@@ -91,8 +91,9 @@ async function wechatyBroadcastIssue (
     ].join('&'),
   ].join('?')
 
+  console.info('webhook url:', url)
   const result = (await FileBox.fromUrl(url).toBuffer()).toString()
-  console.info('result:', result)
+  console.info('result:', result.substr(0, Math.min(100, result.length)))
 }
 
 export = (app: Application) => {
