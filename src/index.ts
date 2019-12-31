@@ -94,7 +94,7 @@ async function wechatyBroadcastIssue (
   if (process.env.MIKEBO_SECRET) {
     url = [
       url,
-      process.env.MIKEBO_SECRET,
+      `mikeboSecret=${process.env.MIKEBO_SECRET}`,
     ].join('&')
   }
 
