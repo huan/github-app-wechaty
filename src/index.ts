@@ -81,7 +81,7 @@ async function wechatyBroadcastIssue (
 ) {
   console.info('callWebhook:', JSON.stringify(payload))
 
-  const url = [
+  let url = [
     'https://mike.zixia.net/wechaty/',
     [
       `url=${encodeURIComponent(payload.url)}`,
@@ -90,6 +90,13 @@ async function wechatyBroadcastIssue (
       `title=${encodeURIComponent(payload.title)}`,
     ].join('&'),
   ].join('?')
+
+  if (process.env.MIKEBO_SECRET) {
+    url = [
+      url,
+      process.env.MIKEBO_SECRET,
+    ].join('&')
+  }
 
   console.info('webhook url:', url)
   const result = (await FileBox.fromUrl(url).toBuffer()).toString()
