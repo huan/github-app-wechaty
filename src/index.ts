@@ -27,12 +27,14 @@ const openIssue: OnCallback<Webhooks.WebhookPayloadIssues> = async (context) => 
   const description = issueBody.slice(0, Math.max(issueBody.length, 70))
   const thumbnailUrl = avatarUrl
 
-  await callWebhook({
-    description,
-    thumbnailUrl,
-    title,
-    url,
-  })
+  if (belongsToWechaty(context.payload.repository.owner.login)) {
+    await wechatyBroadcastIssue({
+      description,
+      thumbnailUrl,
+      title,
+      url,
+    })
+  }
 }
 
 const commentIssue: OnCallback<Webhooks.WebhookPayloadIssueComment> = async (context) => {
@@ -54,25 +56,33 @@ const commentIssue: OnCallback<Webhooks.WebhookPayloadIssueComment> = async (con
   const description = commentBody.slice(0, Math.max(commentBody.length, 70))
   const thumbnailUrl = avatarUrl
 
-  await callWebhook({
-    description,
-    thumbnailUrl,
-    title,
-    url,
-  })
+  // console.info(context.payload.repository)
+
+  if (belongsToWechaty(context.payload.repository.owner.login)) {
+    await wechatyBroadcastIssue({
+      description,
+      thumbnailUrl,
+      title,
+      url,
+    })
+  }
 
   // const issueComment = context.issue({ body: `Thanks for comment this issue! ${n++}` })
   // await context.github.issues.createComment(issueComment)
   // console.info(context)
 }
 
-async function callWebhook (
+function belongsToWechaty (login: string): boolean {
+  return !!login.match(/^(chatie|wechaty)$/i)
+}
+
+async function wechatyBroadcastIssue (
   payload: UrlLinkPayload,
 ) {
   console.info('callWebhook:', JSON.stringify(payload))
 
   const url = [
-    'https://friday.bot5.club/webhook/',
+    'https://mike.zixia.net/wechaty/',
     [
       `url=${encodeURIComponent(payload.url)}`,
       `description=${encodeURIComponent(payload.description || '')}`,
