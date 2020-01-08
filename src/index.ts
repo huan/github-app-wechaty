@@ -74,13 +74,12 @@ const commentIssue: OnCallback<WebhookPayloadIssueComment> = async (context) => 
   if (isBot(context.payload.issue.user.login)) {
     return
   }
-    await wechatyBroadcastIssue({
-      description,
-      thumbnailUrl,
-      title,
-      url,
-    })
-  }
+  await wechatyBroadcastIssue({
+    description,
+    thumbnailUrl,
+    title,
+    url,
+  })
 
   // const issueComment = context.issue({ body: `Thanks for comment this issue! ${n++}` })
   // await context.github.issues.createComment(issueComment)
