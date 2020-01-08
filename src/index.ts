@@ -2,7 +2,10 @@ import { Application } from 'probot' // eslint-disable-line no-unused-vars
 import {
   OnCallback,
 }              from 'probot/lib/application'
-import Webhooks from '@octokit/webhooks'
+import {
+  WebhookPayloadIssues,
+  WebhookPayloadIssueComment,
+}                                 from '@octokit/webhooks'
 
 import { UrlLinkPayload } from 'wechaty-puppet'
 
@@ -10,7 +13,7 @@ import FileBox from 'file-box'
 
 let n = 0
 
-const openIssue: OnCallback<Webhooks.WebhookPayloadIssues> = async (context) => {
+const openIssue: OnCallback<WebhookPayloadIssues> = async (context) => {
   const fullName = context.payload.repository.full_name
   const issueNumber = context.payload.issue.number
   const issueTitle = context.payload.issue.title
@@ -27,17 +30,23 @@ const openIssue: OnCallback<Webhooks.WebhookPayloadIssues> = async (context) => 
   const description = issueBody.slice(0, Math.max(issueBody.length, 70))
   const thumbnailUrl = avatarUrl
 
-  if (belongsToWechaty(context.payload.repository.owner.login)) {
-    await wechatyBroadcastIssue({
-      description,
-      thumbnailUrl,
-      title,
-      url,
-    })
+  if (!belongsToWechaty(context.payload.repository.owner.login)) {
+    return
   }
+
+  if (isBot(context.payload.issue.user.login)) {
+    return
+  }
+
+  await wechatyBroadcastIssue({
+    description,
+    thumbnailUrl,
+    title,
+    url,
+  })
 }
 
-const commentIssue: OnCallback<Webhooks.WebhookPayloadIssueComment> = async (context) => {
+const commentIssue: OnCallback<WebhookPayloadIssueComment> = async (context) => {
   // const issue = context .issue()
   // console.info(context.payload.repository)
   const fullName = context.payload.repository.full_name
@@ -58,7 +67,13 @@ const commentIssue: OnCallback<Webhooks.WebhookPayloadIssueComment> = async (con
 
   // console.info(context.payload.repository)
 
-  if (belongsToWechaty(context.payload.repository.owner.login)) {
+  if (!belongsToWechaty(context.payload.repository.owner.login)) {
+    return
+  }
+
+  if (isBot(context.payload.issue.user.login)) {
+    return
+  }
     await wechatyBroadcastIssue({
       description,
       thumbnailUrl,
@@ -73,7 +88,13 @@ const commentIssue: OnCallback<Webhooks.WebhookPayloadIssueComment> = async (con
 }
 
 function belongsToWechaty (login: string): boolean {
-  return !!login.match(/^(chatie|wechaty)$/i)
+  const matched = login.match(/^(chatie|wechaty)$/i)
+  return matched !== null
+}
+
+function isBot (login: string): boolean {
+  const matched = login.match(/\[bot\]$/i)
+  return matched !== null
 }
 
 async function wechatyBroadcastIssue (
